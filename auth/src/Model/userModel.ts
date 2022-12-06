@@ -54,7 +54,7 @@ type datas = {
   password: string;
 };
 
-export const userLogin = async (data: datas): Promise<any> => {
+export const userLogin = async (data: datas): Promise<any > => {
   const { email } = data;
   console.log(data);
   try {
