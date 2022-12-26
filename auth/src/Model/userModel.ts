@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Schema, model, ObjectId } from "mongoose";
+import { application } from "express";
+import mongoose, { Schema, model, ObjectId, Mongoose } from "mongoose";
 import { comparepass, hashpassword } from "../controller/password";
 // import bcrypt, { compare } from 'bcrypt'
 
@@ -9,6 +10,19 @@ interface IUser {
   number: number;
   password: string;
   _id?: ObjectId;
+  followers: [{ type: string; userId: ObjectId }];
+  following: [{ type: string; userId: ObjectId }];
+  // savedposts: [{ type: string; userId: ObjectId }];
+  posts: [{ content: string; userId: ObjectId }];
+  profileimage: string;
+  coverimage: string;
+  verified: Boolean;
+  status: string;
+  dob: string;
+  workat: string;
+  githubid: string;
+  linkedinid: string;
+  Livesin: string;
   userLogin: () => {};
 }
 
@@ -18,6 +32,19 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true },
   number: { type: Number },
   password: { type: String },
+  followers: { type: [{ type: mongoose.Types.ObjectId }] },
+  following: { type: [{ type: mongoose.Types.ObjectId }] },
+  // savedposts: { type: [{ type: mongoose.Types.ObjectId }] },
+  posts: { type: [{ content: String, userId: mongoose.Types.ObjectId }] },
+  dob: { type: String, default: null },
+  workat: { type: String, default: null },
+  Livesin: { type: String, default: null },
+  profileimage: { type: String, default: null },
+  coverimage: { type: String, default: null },
+  linkedinid: { type: String, default: null },
+  status: { type: String, default: null },
+  verified: { type: Boolean, default: true },
+  githubid: { type: String, default: null },
 });
 
 // 3. Create a Model.
@@ -54,7 +81,7 @@ type datas = {
   password: string;
 };
 
-export const userLogin = async (data: datas): Promise<any > => {
+export const userLogin = async (data: datas): Promise<any> => {
   const { email } = data;
   console.log(data);
   try {
@@ -79,4 +106,138 @@ export const userLogin = async (data: datas): Promise<any > => {
 export const findUser = (email: string) => {
   return User.findOne({ email: email });
 };
+export const addProfileImage = async (body: any) => {
+  const profile = await User.findByIdAndUpdate(body.user.id, {
+    profileimage: body.body,
+  });
+};
+export const coverphoto = async (body: any) => {
+  console.log(body.user.id, ">>>>>>>>>>");
+  console.log(body, "allbody modal");
+  const cover = await User.findByIdAndUpdate(body.user.id, {
+    coverimage: body.body,
+  });
+};
+export const profileextra = async (body: any) => {
+  const profiledata = await User.findByIdAndUpdate(body.user.id, {
+    $set: {
+      name: body.data.fullname,
+      number: body.data.number,
+      Livesin: body.data.livesin,
+      workat: body.data.works,
+      dob: body.data.DOB,
+      githubid: body.data.githublink,
+      linkedinid: body.data.linkdinlink,
+    },
+  });
+  return profiledata;
+};
+
+export const ProfileDetails = async (id: ObjectId) => {
+  console.log(id, "idddddddd");
+  return User.findOne({ _id: id });
+};
+export const findallusers = async (body: any) => {
+  console.log(body.user.id, "kikkkk");
+  const id = body.user.id;
+  const following = await User.findById(id, "following");
+  let hiddenIds = following?.following;
+  hiddenIds?.push(id);
+  const response = await User.find({ _id: { $nin: hiddenIds } });
+  return response;
+};
+export const follwdetails = async (body: any) => {
+  const id = body.user.id;
+  const followingid = body.body;
+  console.log(followingid, "who want to followers");
+  const response = await User.findById(id);
+  console.log(response, "following");
+  const follower = await User.findById(followingid);
+  console.log(follower, "who");
+  console.log({ following: response?.following });
+  if (!response?.following.includes(followingid)) {
+    await response?.updateOne({ $push: { following: followingid } });
+    await follower?.updateOne({ $push: { followers: id } });
+    return { following: true, massaage: "following sucessfully" };
+  } else {
+    await response.updateOne({ $pull: { following: followingid } });
+    await follower?.updateOne({ $pull: { followers: id } });
+    return { following: false, message: "unfollow sucessfully" };
+  }
+};
+export const usersprofile = async (id: ObjectId) => {
+  return await User.findById(id);
+};
+export const logineduser = async (id:ObjectId) =>{
+  return await User.findById(id);
+}
+// export const savedposts = async (body: any) => {
+//   console.log(body.user.id, "requu");
+//   // const saved = await PostModel.findById(body)
+//   const saved = await User.findByIdAndUpdate(
+//     { _id: body.user.id },
+//     { $push: { savedposts: body.body } }
+//   );
+//   return await User.aggregate([
+//     {
+//       $unwind: {
+//         path: "$savedposts",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "posts",
+//         localField: "savedposts",
+//         foreignField: "_id",
+//         as: "postw",
+//       },
+//     },
+//   ]);
+// };
+export const fetchusers = async (body: any) => {
+  const userid = body.user.id;
+  return await User.find({ _id: { $ne: userid } });
+};
+export const followingmembers = async (body: any) => {
+  const userid = body.user.id;
+  const user = await User.findById(userid);
+  return await User.aggregate([
+    {
+      $match:{
+        _id: new mongoose.Types.ObjectId(userid),
+
+      }
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "following",
+        foreignField: "_id",
+        as: "followinguser",
+      },
+    },
+  ]);
+
+};
+export const followermembers = async (body:any) =>{
+  const userid = body.user.id;
+  const user = await User.findById(userid);
+  return await User.aggregate([
+    {
+      $match:{
+        _id: new mongoose.Types.ObjectId(userid)
+      }
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "followers",
+        foreignField: "_id",
+        as: "followeruser",
+      },
+    },
+    
+  ])
+}
+
 export default User;

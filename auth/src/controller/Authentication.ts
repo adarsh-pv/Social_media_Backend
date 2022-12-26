@@ -40,7 +40,7 @@ export const  login = async (req:Request,res:Response)=>{
     if(response.email){
     const {_id,email,name} = response;
     const token = signToken(_id,email)
-  return res.status(201).json({token,name})
+  return res.status(201).json({token,name,_id})
 }
 else{
     return res.send(response)
