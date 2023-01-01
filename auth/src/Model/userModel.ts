@@ -171,29 +171,6 @@ export const usersprofile = async (id: ObjectId) => {
 export const logineduser = async (id:ObjectId) =>{
   return await User.findById(id);
 }
-// export const savedposts = async (body: any) => {
-//   console.log(body.user.id, "requu");
-//   // const saved = await PostModel.findById(body)
-//   const saved = await User.findByIdAndUpdate(
-//     { _id: body.user.id },
-//     { $push: { savedposts: body.body } }
-//   );
-//   return await User.aggregate([
-//     {
-//       $unwind: {
-//         path: "$savedposts",
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "posts",
-//         localField: "savedposts",
-//         foreignField: "_id",
-//         as: "postw",
-//       },
-//     },
-//   ]);
-// };
 export const fetchusers = async (body: any) => {
   const userid = body.user.id;
   return await User.find({ _id: { $ne: userid } });
@@ -238,6 +215,11 @@ export const followermembers = async (body:any) =>{
     },
     
   ])
+}
+export const getusers = async (id:any) =>{
+  console.log(id,"idd")
+ return await User.findById({_id:id})
+
 }
 
 export default User;

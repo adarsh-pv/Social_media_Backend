@@ -1,4 +1,4 @@
-import { addProfileImage,ProfileDetails,coverphoto, profileextra, findallusers, follwdetails, usersprofile,fetchusers, followingmembers, followermembers, logineduser } from "../Model/userModel"
+import { addProfileImage,ProfileDetails,coverphoto, profileextra, findallusers, follwdetails, usersprofile,fetchusers, followingmembers, followermembers, logineduser, getusers } from "../Model/userModel"
 import { json, Request,Response } from "express"
 
 
@@ -32,12 +32,10 @@ export const profileextradata = async (req:Request,res:Response) =>{
   res.status(200).json(response)
 }
 export const allusers = async (req:Request,res:Response) =>{
-  console.log(req.body,"--------jdfhg--")
   const response = await findallusers(req.body)
   res.status(200).json(response)
 }
 export const follow = async (req:Request,res:Response) =>{
-  console.log(req.body,"hhhhhh")
   const response = await follwdetails(req.body)
   res.status(200).json(response)
 }
@@ -68,9 +66,9 @@ export const loginuser = async (req:Request,res:Response) =>{
   const response = await logineduser(req.body.user.id)
   res.status(200).json(response)
 }
-
-    // const response = await editcoverimage(req.body.imageurl)
-    // if(response){
-    //     res.send(200).send("success")
-    // }
+export const getUser = async (req:Request,res:Response) =>{
+  const id = req.params.id
+  const response = await getusers(req.params.id)
+  res.status(200).json(response)
+}
 
