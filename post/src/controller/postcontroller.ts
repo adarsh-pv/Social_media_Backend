@@ -71,5 +71,5 @@ export const saved = async (req:Request,res:Response) =>{
 }
 export const fetchsavedpost = async (req:Request,res:Response) =>{
   const response = await fetchsaveitems(req.body)
-  console.log(response,"uuu")
+  res.status(200).json(response)
 }

@@ -169,8 +169,8 @@ export const savedposts = async (body:any) =>{
 }
 export const fetchsaveitems = async (body:any) =>{
   const userid = body.user.id
-  const post = await PostModel.find({saved:{$in:[userid]}})
-console.log('checked post ', post)
+ return await PostModel.find({saved:{$in:[userid]}})
+
 }
 export default PostModel;
 
