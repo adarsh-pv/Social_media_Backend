@@ -10,11 +10,17 @@ const ChatSchema = new Schema<IChat>({
 {timestamps:true})
 const Chat = model<IChat>("Chat",ChatSchema)
 
-export const Createchates = async (body:any) =>{
-    const newaChat = new Chat({
-        members:[body.SenderId,body.receiverId]
-    })
-    return await newaChat.save()
+export const Createchates = async (SenderId:ObjectId,receiverId:ObjectId) =>{
+    const exist = await Chat.findOne({members:{$all:[SenderId,receiverId]}})
+   if(!exist){
+
+       const newaChat = new Chat({
+           members:[SenderId,receiverId]
+       })
+       return await newaChat.save()
+   }else{
+    return exist;
+   }
     
 }
 export const userChat = async (body:any) =>{

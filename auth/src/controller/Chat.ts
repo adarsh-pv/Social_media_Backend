@@ -3,7 +3,10 @@ import { Createchates, findchats, userChat } from '../Model/chatModel'
 
 export const createChat = async (req:Request,res:Response)=>{
     try{
-        const response = await Createchates(req.body)
+        console.log(req.body,"eidieid")
+        const SenderId =req.body.user.id
+        const receiverId =req.body.id
+        const response = await Createchates(SenderId,receiverId)
         res.status(200).json(response)
     }catch (error) {
         res.status(500).json(error)

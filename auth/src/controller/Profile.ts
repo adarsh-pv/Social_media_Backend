@@ -1,4 +1,4 @@
-import { addProfileImage,ProfileDetails,coverphoto, profileextra, findallusers, follwdetails, usersprofile,fetchusers, followingmembers, followermembers, logineduser, getusers } from "../Model/userModel"
+import { addProfileImage,ProfileDetails,coverphoto, profileextra, findallusers, follwdetails, usersprofile,fetchusers, followingmembers, followermembers, logineduser, getusers, searchengine} from "../Model/userModel"
 import { json, Request,Response } from "express"
 
 
@@ -71,4 +71,9 @@ export const getUser = async (req:Request,res:Response) =>{
   const response = await getusers(req.params.id)
   res.status(200).json(response)
 }
+export const searchdata =  async (req:Request,res:Response) =>{
+ const response = await searchengine(req.body.body)
+ res.status(200).json(response)
+}
+
 

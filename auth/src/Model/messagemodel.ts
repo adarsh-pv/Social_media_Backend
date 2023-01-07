@@ -23,9 +23,11 @@ export const addMessages = async (body:any) =>{
     }).save()
 }
 export const getMessage = async (body:any) =>{
+    console.log(body,"hkjjk")
     const { ChatId } = body
     console.log(body)
-   return await Message.find({body})
+   return  await Message.find({ChatId:body})
+
 
 }
 

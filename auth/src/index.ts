@@ -9,6 +9,7 @@ import Mongoose from "./Model/mongoConnection";
 import { signToken } from "./controller/Authentication";
 import cookieparser from 'cookie-parser'
 import connectus from './Rabitmq/rabitmq'
+import Adminrouter from "./Router/adminRouter";
 
 // import cookieSession from "cookie-session";
 import  userRoutes from './Router/userRoutrer'
@@ -21,6 +22,8 @@ app.use(cookieparser())
 app.use('/',userRoutes)
 app.use('/chat',chatRoutes)
 app.use('/message',messageRoutes)
+app.use('/admin',Adminrouter)
+
 const connection = Mongoose.connection;
 connectus().then((channel)=>{
 app.listen(4000, ()=>{

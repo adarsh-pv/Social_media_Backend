@@ -23,6 +23,7 @@ interface IUser {
   githubid: string;
   linkedinid: string;
   Livesin: string;
+  isBlocked:Boolean;
   userLogin: () => {};
 }
 
@@ -45,6 +46,7 @@ const userSchema = new Schema<IUser>({
   status: { type: String, default: null },
   verified: { type: Boolean, default: true },
   githubid: { type: String, default: null },
+  isBlocked:{type:Boolean,default:false}
 });
 
 // 3. Create a Model.
@@ -59,7 +61,6 @@ type data = {
 };
 // run().catch(err => console.log(err));
 export const createUser = async (data: data) => {
-  console.log("kkk");
   const { name, number, password, email } = data;
   try {
     const hashedpassword = await hashpassword(password);
@@ -83,20 +84,20 @@ type datas = {
 
 export const userLogin = async (data: datas): Promise<any> => {
   const { email } = data;
-  console.log(data);
+
   try {
-    // const email = data.email
     const user = await User.findOne({ email: email });
-    console.log(user, "user is here");
     if (user) {
-      // let password = data.password
+      if(user.isBlocked === true){
+        return {failed:true,message:"You're Blocked"}
+      }else{
       const response = await comparepass(user.password, data.password);
       const { email, name, _id } = user;
       if (response) return { email, _id, name };
       else {
         return { failed: true, maessage: "Invalid password" };
       }
-    } else {
+    } } else {
       return { failed: true, message: "User not found" };
     }
   } catch (error) {
@@ -138,13 +139,11 @@ export const ProfileDetails = async (id: ObjectId) => {
   return User.findOne({ _id: id });
 };
 export const findallusers = async (body: any) => {
-  console.log(body.user.id, "kikkkk");
   const id = body.user.id;
   const following = await User.findById(id, "following");
-  let hiddenIds = following?.following;
+  const hiddenIds = following?.following;
   hiddenIds?.push(id);
-  const response = await User.find({ _id: { $nin: hiddenIds } });
-  return response;
+  return await User.find({ _id: { $nin: hiddenIds } });
 };
 export const follwdetails = async (body: any) => {
   const id = body.user.id;
@@ -221,5 +220,33 @@ export const getusers = async (id:any) =>{
  return await User.findById({_id:id})
 
 }
+export const searchengine = async (body:any) =>{
+ return await User.find({
+    name:{ $regex: new RegExp(body), $options: 'si' }
+  })
+}
+export const alluserslist = async(page:number,itemperPage:number)=>{
+  
+  return await User.find().skip((page-1)* itemperPage).limit(itemperPage)
+ 
+}
+export const block = async(userid: any) => {
+  try {
+    const id = new mongoose.Types.ObjectId(userid);
+    const user = await User.findById({_id:id})
+    if(user?.isBlocked === false){
+      const response = await User.findByIdAndUpdate({_id:id},{$set:{isBlocked:true}},{new:true});
+      return response;
+    }
+    if(user?.isBlocked === true){
+      const response = await User.findByIdAndUpdate({_id:id},{$set:{isBlocked:false}},{new:true});
+      return response
+    }
+  } catch (error) {
+    console.error(error);
+    return null; // or throw a custom error
+  }
+};
+
 
 export default User;

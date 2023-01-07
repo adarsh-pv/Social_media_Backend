@@ -2,7 +2,7 @@ import   {Router , json }  from "express";
 import { login, signup , sendVerify } from "../controller/Authentication";
 import cors from "cors";
 import { userAuth} from "../middlewares/authentication";
-import { coverphotos, profilephoto,profileDetails, profileextradata, allusers, follow, userprofile,  fetchalluser, followinguser, followuser, loginuser, getUser} from "../controller/Profile";
+import { coverphotos, profilephoto,profileDetails, profileextradata, allusers, follow, userprofile,  fetchalluser, followinguser, followuser, loginuser, getUser, searchdata} from "../controller/Profile";
 import { createChat, findChat, userChats } from "../controller/Chat";
 // import { createprofile } from "../controller/Profile";
 const route = Router()
@@ -25,6 +25,8 @@ route.get('/followingusers',userAuth,followinguser)
 route.get('/followersusers',userAuth,followuser)
 route.get('/logineduser',userAuth,loginuser)
 route.get('/getUserdata/:id',getUser)
+route.put('/Searchengine',searchdata)
+
 
 
 

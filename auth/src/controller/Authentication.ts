@@ -11,20 +11,11 @@ export const signToken = (_id:ObjectId, email:string)=>{
             expiresIn : "2 days"
         })
         return token
-    }
+    }   
 
 }  
 
 export const signup = async (req:Request,res:Response) =>{
-    console.log("Ddd")
-    // type data = {
-    //     name :string,
-    //     number:number,
-    //     password:string,
-    //     email:string,
-    //     _id:ObjectId
-    // }
-    
  const register= await createUser(req.body.body);
 console.log("first",register)
  if(register){
@@ -36,7 +27,6 @@ export const  login = async (req:Request,res:Response)=>{
     console.log("login")
     type user ={_id:ObjectId,email:string,password:string,name:string}
     const response:user= await userLogin(req.body.body)
-
     if(response.email){
     const {_id,email,name} = response;
     const token = signToken(_id,email)
