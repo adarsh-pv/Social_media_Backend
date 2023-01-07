@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 // import e from "express";
-import mongoose, { Date, model, ObjectId, Schema } from "mongoose";
+import mongoose, { Date, model, ObjectId, Schema, Types } from "mongoose";
 import ampqp from "../Rabitmq/rabitmq";
 
 interface Ipost {
@@ -9,16 +9,19 @@ interface Ipost {
   image: string;
   comments: [{ content: string; userId: ObjectId; Date: Date }];
   reactions: [{ type: string; userId: ObjectId }];
+  reportedusers:[{type:ObjectId,userId:ObjectId}];
   saved:[{type:string;userId:ObjectId}]
   methods: {
     createPost: () => {};
-  };
+  },
+  status:boolean
 }
 const postSchema = new Schema<Ipost>(
   {
     userid: { type: mongoose.Types.ObjectId },
     caption: { type: String },
     image: { type: String },
+    status:{default:false ,type:Boolean},
     comments: {
       type: [
         {
@@ -30,7 +33,8 @@ const postSchema = new Schema<Ipost>(
       required: true,
     },
     reactions: { type: [{ type: String, userId: mongoose.Types.ObjectId }] },
-    saved:{type: [{type:String,userId:mongoose.Types.ObjectId}]}
+    saved:{type: [{type:String,userId:mongoose.Types.ObjectId}]},
+    reportedusers:[{type:mongoose.Types.ObjectId,userId:mongoose.Types.ObjectId}]
   },
   { timestamps: true }
 );
@@ -49,11 +53,23 @@ export const createpost = async (data: any) => {
       return false;
     });
 };
-export const viewall = async () => {
+export const viewall = async (userid:any) => {
+ const id = new mongoose.Types.ObjectId(userid)
+   console.log(id,"kkuji")
+  console.log(typeof(id));
+  // mongoose.Types.ObjectId(userid)
+  
   //  let posts = await PostModel.find().populate('userid')
   //  console.log(posts,"=============")
-  return await PostModel.aggregate([
+
+  const posts = await PostModel.aggregate([
     {
+     $match:{
+     status:false,
+     reportedusers:{$nin:[id]}
+     },
+    },
+     {
       $lookup: {
         from: "users",
         localField: "userid",
@@ -67,12 +83,17 @@ export const viewall = async () => {
         path: "$userid",
       },
     },
+   
     {
       $sort: {
         createdAt: -1,
       },
     },
+
   ]);
+  // console.log(posts,"postewwwwwwwwwwwwwwwwwwwwww")
+  
+  return posts;
 };
 
 export const commentedUsers = async (postid: string) => {
@@ -120,7 +141,6 @@ export const Likepost = async (body: any) => {
       return { message: "you are unautharised,You are un authoried" };
     }
     const post = await PostModel.findById(id);
-    console.log(post, "jdjddjj");
     // const reaction = { userId:userid}
     if (!post?.reactions.includes(userid)) {
       const app = await post?.updateOne({ $push: { reactions: userid } });
@@ -137,7 +157,6 @@ export const docomment = async (body: any) => {
   const comment = body.body.values.comment;
   const postid = body.body.post;
   const userid = body.user.id;
-  console.log(postid, comment, userid, "dd");
   if (!comment && !postid) {
     return { message: "all filed are required" };
   }
@@ -153,7 +172,21 @@ export const docomment = async (body: any) => {
   }
 };
 export const showmyposts = async (data: any) => {
-   return await PostModel.find({userid:data.user.id}).sort({createdAt: -1});
+  const user = data
+  //  return await PostModel.find({userid:data.user.id}).sort({createdAt: -1});
+  return await PostModel.aggregate([
+    {
+      $match:{
+        userid:new Types.ObjectId(user),
+        status:false
+      }
+    },
+    {
+      $sort:{
+        createdAt: -1
+      }
+    }
+  ])
 };
 export const savedposts = async (body:any) =>{
   const id = body.id
@@ -171,6 +204,33 @@ export const fetchsaveitems = async (body:any) =>{
   const userid = body.user.id
  return await PostModel.find({saved:{$in:[userid]}})
 
+}
+export const movetotrash = async (body:any) =>{
+return await PostModel.findByIdAndUpdate(body.postid,{$set:{ status:true}})
+}
+export const shareposts =async (id:any) =>{
+return await PostModel.aggregate([
+  {
+    $match: {
+      _id: new mongoose.Types.ObjectId(id),
+    },
+  },
+  {
+    $lookup: {
+     from:"users",
+    localField: "userid",
+     foreignField: "_id",
+     as: "users"
+}
+  }
+])
+
+}
+export const reportpost = async (userid:any,post:any)=>{
+  const postinfo = await PostModel.findById(post)
+  if(postinfo){
+   return await postinfo.updateOne({$push:{reportedusers:userid}})
+  } 
 }
 export default PostModel;
 
