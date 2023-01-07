@@ -13,9 +13,9 @@ const io = require('socket.io')(8800, {
 console.log("started at 8800")
 let activeUser: any[] = []
 
-io.on("connection", (socket:any)=>{
-    socket.on('new-uer-add',(newUserId:any)=>{
-        if(!activeUser.some((user)=>{
+io.on("connection", (socket:any)=>{ 
+    socket.on('new-user-add',(newUserId:any)=>{
+        if(!activeUser.some((user)=>{ 
             user.userId === newUserId
         })){
           activeUser.push({
@@ -38,8 +38,7 @@ io.on("connection", (socket:any)=>{
     socket.on("disconnect",()=>{
         activeUser = activeUser.filter((user)=>user.socketId !== socket.id);
         console.log("user Disconnected",activeUser)
-        io.emit('get-Users',activeUser)
-
+        io.emit('get-Users',activeUser)    
     })
 })
 
