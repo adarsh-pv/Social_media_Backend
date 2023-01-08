@@ -15,7 +15,7 @@ export default function ampqp (){
                    throw error1;
                 }
                 else{
-                    // Channel.sendToQueue('hello',Buffer.from('hello'))
+                    Channel.sendToQueue('hello',Buffer.from('hello'))
                     resolve(Channel)
                 }
             })

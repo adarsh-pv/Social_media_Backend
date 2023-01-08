@@ -15,5 +15,4 @@ try {
 } catch (error) {
   console.log(error, "error found");
 }
-
 export default Mongoose;

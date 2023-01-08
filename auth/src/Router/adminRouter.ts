@@ -12,9 +12,9 @@ router.use(cors())
 // router.post('/',adminSignup)
 router.post('/', adminLogin)
 router.get('/verify',adminAuth,Adminverify)
-router.put('/findusers',findalluser)
-router.patch('/blockUser',blockUser)
-router.put('/Searchbar',searchdata)
+router.put('/findusers',adminAuth,findalluser)
+router.patch('/blockUser',adminAuth,blockUser)
+router.put('/Searchbar',adminAuth,searchdata)
 
 
 export default router;

@@ -25,9 +25,9 @@ app.use('/message',messageRoutes)
 app.use('/admin',Adminrouter)
 
 const connection = Mongoose.connection;
-connectus().then((channel)=>{
+// connectus().then((channel)=>{
 app.listen(4000, ()=>{
 console.log("Running in 4000 server")
     });
-})
+// })   
 
