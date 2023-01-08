@@ -1,7 +1,7 @@
 import { Router, json } from "express";
 import cors from "cors";
 import { commentedusers, Commentpost, createPost, fetchreportedPosts, fetchsavedpost, likepost, reporting, saved, sharepost, showmyphoto, showPost, trash } from "../Controller/postcontroller";
-import { verifytoken } from "../Middlewares/authenticatioin";
+import { adminAuth, verifytoken } from "../Middlewares/authenticatioin";
 
 const route = Router();
 route.use(json());
@@ -18,8 +18,9 @@ route.get('/fetchsaveditems',verifytoken,fetchsavedpost)
 route.post('/deletepost',trash)
 route.post('/sharepost',sharepost)
 route.patch('/reportpost',verifytoken,reporting)
-route.get('/fetchreportedposts',fetchreportedPosts)
-route.post('/postdelete',trash)
+route.get('/fetchreportedposts',adminAuth,fetchreportedPosts)
+route.post('/postdelete',adminAuth,trash)
+
 
 
 

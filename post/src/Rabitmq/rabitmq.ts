@@ -16,10 +16,10 @@ export default function ampqp (){
                    throw error1;
                 }
                 else{
-                    // Channel.consume("hello",(msg)=>{
-                    //  console.log("first",msg?.content.toString())
+                    Channel.consume("hello",(msg)=>{
+                     console.log("first",msg?.content.toString())
                      resolve(Channel)
-                    // })
+                    })
                  
                 }
             })

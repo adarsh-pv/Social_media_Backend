@@ -11,11 +11,12 @@ import {
   movetotrash,
   shareposts,
   reportpost,
+  repotedposts
 } from "../Model/postmodel";
 import PostModel from "../Model/postmodel";
 
 export const createPost = async (req: Request, res: Response) => {
-  console.log("first");
+  try{
   const { caption, image } = req.body.body;
   console.log(caption, image, "caption and image");
   console.log(req.body.user, "ddd");
@@ -29,9 +30,14 @@ export const createPost = async (req: Request, res: Response) => {
     .then((data) => {
       res.status(201).send({ success: true, data: data });
     });
+  }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 
 export const showPost = async (req: Request, res: Response) => {
+  try{
   const response = await viewall(req.body.user.id);
   const userid = req.body.user.id;
   const isliked = await response.map((posts) => {
@@ -42,39 +48,72 @@ export const showPost = async (req: Request, res: Response) => {
       posts.isSaved = true;
     }
     return posts;
-  });
-  console.log(isliked, "isliked");
+  });;
   res.status(200).send(isliked);
+    }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 
 export const commentedusers = async (req: Request, res: Response) => {
+  try{
   const postid = req.body.body;
   const comment = await commentedUsers(postid);
   res.status(200).send(comment);
+    }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 
 export const likepost = async (req: Request, res: Response) => {
+  try{
   console.log(req.body, "bodydyyy");
   const response = await Likepost(req.body);
   return res.status(200).json({ response });
+    }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 export const Commentpost = async (req: Request, res: Response) => {
+  try{
   const response = await docomment(req.body);
+    }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 export const showmyphoto = async (req: Request, res: Response) => {
+  try{
   const response = await showmyposts(req.body.id);
-  console.log(response, "my posts");
   res.status(200).json(response);
+    }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 export const saved = async (req: Request, res: Response) => {
+  try{
   const response = await savedposts(req.body);
   res.status(200).json(response);
+}catch(error){
+  console.log(error)
+  res.status(403).json(error)
+}
 };
 export const fetchsavedpost = async (req: Request, res: Response) => {
+  try{
   const response = await fetchsaveitems(req.body);
   res.status(200).json(response);
+}catch(error){
+  console.log(error)
+  res.status(403).json(error)
+}
 };
 export const trash = async (req: Request, res: Response) => {
+  console.log(req.body)
   try {
     const response = await movetotrash(req.body);
     res.status(200).json(response);
@@ -92,43 +131,22 @@ export const sharepost = async (req: Request, res: Response) => {
   }
 };
 export const reporting = async (req: Request, res: Response) => {
-  const userid = req.body.user.id;
-  const post = req.body.postid;
-  const response = await reportpost(userid, post);
-  res.status(200).json(response);
+  try{
+    const userid = req.body.user.id;
+    const post = req.body.postid;
+    const response = await reportpost(userid, post);
+    res.status(200).json(response);
+  }catch(error){
+    console.log(error)
+    res.status(403).json(error)
+  }
 };
 export const fetchreportedPosts = async (req: Request, res: Response) => {
   try {
-    // const posts = await PostModel.find({},status:false})
-
-    const posts = await PostModel.aggregate([
-      {
-        $match: {
-          status: false,
-          reportedusers: { $exists: true, $ne: [] },
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userid",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $project: {
-          _id:1,
-          user: 1,
-          createdAt: 1,
-          image: 1,
-          caption: 1,
-          reportedusers: 1,
-        },
-      },
-    ]);
+    const posts = await repotedposts()
     res.status(200).json(posts);
   } catch (error) {
     console.log(error);
   }
 };
+

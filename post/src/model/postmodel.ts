@@ -182,6 +182,19 @@ export const showmyposts = async (data: any) => {
       }
     },
     {
+      $lookup: {
+        from: "users",
+        localField: "userid",
+        foreignField: "_id",
+        as: "userid",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userid",
+      },
+    },
+    {
       $sort:{
         createdAt: -1
       }
@@ -232,5 +245,34 @@ export const reportpost = async (userid:any,post:any)=>{
    return await postinfo.updateOne({$push:{reportedusers:userid}})
   } 
 }
+export const repotedposts = async () =>{
+  return await PostModel.aggregate([
+    {
+      $match: {
+        status: false,
+        reportedusers: { $exists: true, $ne: [] },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "userid",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $project: {
+        _id:1,
+        user: 1,
+        createdAt: 1,
+        image: 1,
+        caption: 1,
+        reportedusers: 1,
+      },
+    },
+  ]);
+}
+
 export default PostModel;
 
