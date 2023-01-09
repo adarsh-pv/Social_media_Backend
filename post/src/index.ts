@@ -8,7 +8,8 @@ import  Mongoose  from "mongoose";
 
 connect();
 const app = express();
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+const origin =['http://localhost:3000','https://socialmedia-370608.web.app']
+app.use(cors({ credentials: true, origin: origin }));
 app.use(express.json());
 app.use(cookieparser());
 app.use("/", PostRoute);

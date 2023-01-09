@@ -30,6 +30,7 @@
     "i": "^0.3.7",
     "jsonwebtoken": "^8.5.1",
     "npm": "^9.1.2",
+    "socket.io": "^4.5.4",
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {

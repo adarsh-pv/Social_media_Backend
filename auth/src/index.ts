@@ -1,22 +1,22 @@
 import  express   from "express";
 import { json } from "express";
-import dotenv from 'dotenv'
+import dotenv, { config } from 'dotenv'
+import {createServer} from 'http'
 dotenv.config({})
-import { createUser } from "./Model/userModel";
-import {userLogin } from "./Model/userModel"
 import cors  from 'cors'
+import socket from "./Socket"
 import Mongoose from "./Model/mongoConnection";
-import { signToken } from "./controller/Authentication";
 import cookieparser from 'cookie-parser'
 import connectus from './Rabitmq/rabitmq'
 import Adminrouter from "./Router/adminRouter";
-
+import {Socket,Server} from 'socket.io'
 // import cookieSession from "cookie-session";
 import  userRoutes from './Router/userRoutrer'
 import chatRoutes from './Router/chatRouter'
 import messageRoutes from  './Router/messageRouter'
 const app = express();
-app.use(cors({credentials:true,origin:'http://localhost:3000'}))
+const origin =['http://localhost:3000','https://socialmedia-370608.web.app']
+app.use(cors({credentials:true,origin:origin}))
 app.use(json())
 app.use(cookieparser())
 app.use('/',userRoutes)
@@ -26,8 +26,21 @@ app.use('/admin',Adminrouter)
 
 const connection = Mongoose.connection;
 // connectus().then((channel)=>{
-app.listen(4000, ()=>{
-console.log("Running in 4000 server")
-    });
+// app.listen(4000, ()=>{
+// console.log("Running in 4000 server")
+//     });
 // })   
+const httpServer = createServer(app)
+
+const io =  new Server (httpServer,{cors:{
+    origin:origin,credentials:true
+   }})
+    httpServer.listen(4000,()=>{
+           socket({io})
+  
+      console.log("listening to 4000 port");
+    })
+  
+
+  
 
