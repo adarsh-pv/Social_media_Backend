@@ -69,7 +69,6 @@ export const commentedusers = async (req: Request, res: Response) => {
 
 export const likepost = async (req: Request, res: Response) => {
   try{
-  console.log(req.body, "bodydyyy");
   const response = await Likepost(req.body);
   return res.status(200).json({ response });
     }catch(error){
