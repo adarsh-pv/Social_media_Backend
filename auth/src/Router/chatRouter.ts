@@ -1,5 +1,5 @@
 import { json, Router } from "express"
-import { createChat, findChat, userChats } from "../controller/Chat"
+import { createChat, findChat, userChats } from "../Controllers/Chat"
 import cors from "cors";
 import { userAuth } from "../middlewares/authentication";
 

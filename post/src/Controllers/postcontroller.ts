@@ -12,8 +12,8 @@ import {
   shareposts,
   reportpost,
   repotedposts
-} from "../Model/postmodel";
-import PostModel from "../Model/postmodel";
+} from "../Models/postmodel";
+import PostModel from "../Models/postmodel";
 
 export const createPost = async (req: Request, res: Response) => {
   try{

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { application } from "express";
 import mongoose, { Schema, model, ObjectId, Mongoose } from "mongoose";
-import { comparepass, hashpassword } from "../controller/password";
+import { comparepass, hashpassword } from "../Controllers/password";
 // import bcrypt, { compare } from 'bcrypt'
 
 interface IUser {

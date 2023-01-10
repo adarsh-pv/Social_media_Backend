@@ -1,13 +1,13 @@
 import { Response, Request } from "express";
 import { ObjectId } from "mongoose";
 import Jwt, { verify } from "jsonwebtoken";
-import { createAdmin, verifyadmin, veriify } from "../Model/adminModel";
+import { createAdmin, verifyadmin, veriify } from "../Models/adminModel";
 import User, {
   alluserslist,
   block,
   findallusers,
   usersprofile,
-} from "../Model/userModel";
+} from "../Models/userModel";
 
 const SECRET_KEY: string | undefined = process.env.JWT_SECRET_KEY;
 export const signToken = (_id: ObjectId, email: string) => {

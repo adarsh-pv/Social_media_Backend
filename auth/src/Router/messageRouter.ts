@@ -1,6 +1,6 @@
 import   {Router , json }  from "express";
 import cors from "cors";
-import { addMessage, getMessages } from "../controller/Message";
+import { addMessage, getMessages } from "../Controllers/Message";
 const router = Router()
 router.use(json())
 router.use(cors())

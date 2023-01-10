@@ -2,7 +2,7 @@ import express from "express";
 import { json } from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser";
-import { connect } from "./Model/mongoConnection";
+import { connect } from "./Models/mongoConnection";
 import PostRoute from "./Router/postRouter";
 import  Mongoose  from "mongoose";
 

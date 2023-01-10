@@ -1,5 +1,5 @@
 import mongoose, { Schema, model, ObjectId, Mongoose } from "mongoose";
-import { hashpassword, comparepass } from "../controller/password";
+import { hashpassword, comparepass } from "../Controllers/password";
 
 interface IAdmin {
   name: string;

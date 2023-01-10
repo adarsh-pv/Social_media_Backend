@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { Createchates, findchats, userChat } from "../Model/chatModel";
+import { Createchates, findchats, userChat } from "../Models/chatModel";
 
 export const createChat = async (req: Request, res: Response) => {
   try {

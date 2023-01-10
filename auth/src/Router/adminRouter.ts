@@ -1,9 +1,9 @@
 import { json, Router } from "express"
 import cors from "cors";
-import {  adminLogin, adminSignup, Adminverify, blockUser, findalluser } from "../controller/admin";
+import {  adminLogin, adminSignup, Adminverify, blockUser, findalluser } from "../Controllers/admin";
 import { adminAuth } from "../middlewares/Adminauthentication";
 import route from "./userRoutrer";
-import { searchdata } from "../controller/Profile";
+import { searchdata } from "../Controllers/Profile";
 
 
 const router = Router()

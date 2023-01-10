@@ -5,7 +5,7 @@ import {createServer} from 'http'
 dotenv.config({})
 import cors  from 'cors'
 import socket from "./Socket"
-import Mongoose from "./Model/mongoConnection";
+import Mongoose from "./Models/mongoConnection";
 import cookieparser from 'cookie-parser'
 import connectus from './Rabitmq/rabitmq'
 import Adminrouter from "./Router/adminRouter";

@@ -12,7 +12,7 @@ import {
   logineduser,
   getusers,
   searchengine,
-} from "../Model/userModel";
+} from "../Models/userModel";
 import { json, Request, Response } from "express";
 
 export const profilephoto = async (req: Request, res: Response) => {

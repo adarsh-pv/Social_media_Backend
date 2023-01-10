@@ -1,7 +1,7 @@
 /* eslint-disable no-empty */
 import { Request , Response , NextFunction } from "express"
 import {verify} from "jsonwebtoken"
-import {findUser} from '../Model/userModel'
+import {findUser} from '../Models/userModel'
 
 export const adminAuth = (req: Request,res: Response,next: NextFunction) =>{
  if(req.headers?.admintoken){

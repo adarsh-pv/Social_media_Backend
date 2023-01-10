@@ -1,6 +1,6 @@
 import Jwt from "jsonwebtoken";
 import { ObjectId } from "mongoose";
-import { createUser, userLogin } from "../Model/userModel";
+import { createUser, userLogin } from "../Models/userModel";
 import { Request, Response } from "express";
 
 const SECRET_KEY: string | undefined = process.env.JWT_SECRET_KEY;

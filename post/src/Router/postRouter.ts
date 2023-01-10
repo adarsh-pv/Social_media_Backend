@@ -1,7 +1,7 @@
 import { Router, json } from "express";
 import cors from "cors";
-import { commentedusers, Commentpost, createPost, fetchreportedPosts, fetchsavedpost, likepost, reporting, saved, sharepost, showmyphoto, showPost, trash } from "../Controller/postcontroller";
-import { adminAuth, verifytoken } from "../Middlewares/authenticatioin";
+import { commentedusers, Commentpost, createPost, fetchreportedPosts, fetchsavedpost, likepost, reporting, saved, sharepost, showmyphoto, showPost, trash } from "../Controllers/postcontroller";
+import { adminAuth, verifytoken } from "../Middleware/authenticatioin";
 
 const route = Router();
 route.use(json());
