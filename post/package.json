@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "start": "ts-node-dev src/index.ts"
+    "start": "ts-node-dev src/index.ts",
+    "deploy":"ts-node src/index.ts"
+    
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.3",
