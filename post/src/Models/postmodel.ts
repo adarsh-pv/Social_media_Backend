@@ -96,7 +96,7 @@ export const viewall = async (userid:any) => {
   return posts;
 };
 
-export const commentedUsers = async (postid: string) => {
+export const   commentedUsers = async (postid: string) => {
   return await PostModel.aggregate([
     {
       $match: {
