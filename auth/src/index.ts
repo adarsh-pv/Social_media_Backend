@@ -15,7 +15,7 @@ import  userRoutes from './Router/userRoutrer'
 import chatRoutes from './Router/chatRouter'
 import messageRoutes from  './Router/messageRouter'
 const app = express();
-const origin =['http://localhost:3000','https://socialmedia-370608.web.app']
+const origin =['http://localhost:3000','https://letsconnected.netlify.app','https://socialmedia-370608.web.app']
 app.use(cors({credentials:true,origin:origin}))
 app.use(json())
 app.use(cookieparser())
