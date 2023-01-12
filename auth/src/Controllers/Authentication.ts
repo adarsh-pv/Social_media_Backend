@@ -19,10 +19,16 @@ export const signToken = (_id: ObjectId, email: string) => {
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const register = await createUser(req.body.body);
+    const register:any = await createUser(req.body.body);
+    console.log(register)
+    if(register?.exist == true){
+      const { exist } = register
+   return res.status(201).json({exist})
+    }
     if (register) {
+      const { name, _id, email } = register;
       const token = signToken(register?._id, register?.email);
-      res.status(201).json({ token });
+      return res.status(200).json({_id, name, token });
     }
   } catch (error) {
     console.log(error);
@@ -38,7 +44,7 @@ export const login = async (req: Request, res: Response) => {
       name: string;
     };
     const response: user = await userLogin(req.body.body);
-    if (response.email) {
+    if (response?.email) {
       const { _id, email, name } = response;
       const token = signToken(_id, email);
       return res.status(201).json({ token, name, _id });

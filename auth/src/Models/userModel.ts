@@ -63,15 +63,20 @@ type data = {
 export const createUser = async (data: data) => {
   const { name, number, password, email } = data;
   try {
-    const hashedpassword = await hashpassword(password);
-    const user = new User({
-      name,
-      number,
-      password: hashedpassword,
-      email,
-    });
-    const newuser = await user.save();
-    return newuser;
+    const exist =await User.find({email:email})
+    if(exist.length>0){
+      return {exist:true,message:"user already exist"}
+    }else{
+      const hashedpassword = await hashpassword(password);
+      const user = new User({
+        name,
+        number,
+        password: hashedpassword,
+        email,
+      });
+      const newuser = await user.save();
+      return newuser;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -89,9 +94,11 @@ export const userLogin = async (data: datas): Promise<any> => {
       if (user.isBlocked === true) {
         return { failed: true, message: "You're Blocked" };
       } else {
-        const response = await comparepass(user.password, data.password);
-        const { email, name, _id } = user;
-        if (response) return { email, _id, name };
+        if(user?.password){
+          const response = await comparepass(user.password, data.password);
+          const { email, name, _id } = user;
+          if (response) return { email, _id, name };
+        }
         else {
           return { failed: true, maessage: "Invalid password" };
         }
