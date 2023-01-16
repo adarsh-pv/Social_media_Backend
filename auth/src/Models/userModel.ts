@@ -215,7 +215,6 @@ export const fetchusers = async (body: any) => {
 export const followingmembers = async (body: any) => {
   try {
     const userid = body.user.id;
-    const user = await User.findById(userid);
     return await User.aggregate([
       {
         $match: {
