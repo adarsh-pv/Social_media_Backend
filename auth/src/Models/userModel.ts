@@ -176,11 +176,13 @@ export const follwdetails = async (body: any) => {
     const id = body.user.id;
     const followingid = body.body;
     const response = await User.findById(id);
+    const follwing = await response?.following
+    const followers = await response?.followers
     const follower = await User.findById(followingid);
     if (!response?.following.includes(followingid)) {
       await response?.updateOne({ $push: { following: followingid } });
       await follower?.updateOne({ $push: { followers: id } });
-      return { following: true, massaage: "following sucessfully" };
+      return { following: true, massaage: "following sucessfully"};
     } else {
       await response.updateOne({ $pull: { following: followingid } });
       await follower?.updateOne({ $pull: { followers: id } });
@@ -307,5 +309,15 @@ export const block = async (userid: any) => {
     return null; // or throw a custom error
   }
 };
+export const myfollwing = async (id:ObjectId) =>{
+try {
+  const user = await User.findById({_id:id})
+  const following =  user?.following
+  const followers =  user?.followers
+  return {following,followers}
+} catch (error) {
+  console.log(error)
+}
+}
 
 export default User;

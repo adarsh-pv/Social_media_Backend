@@ -12,6 +12,7 @@ import {
   logineduser,
   getusers,
   searchengine,
+  myfollwing,
 } from "../Models/userModel";
 import { json, Request, Response } from "express";
 
@@ -134,3 +135,12 @@ export const searchdata = async (req: Request, res: Response) => {
     res.status(403).json(error);
   }
 };
+export const fetchmyfollwing = async (req:Request,res:Response) =>{
+  console.log(req.body,"kkkkkkkkkkkkkkkkdskdfkdfdkl")
+  try {
+    const response = await myfollwing(req.body.user.id)
+    res.status(200).json(response)
+  } catch (error) {
+    res.status(403).json(error)
+  }
+}
