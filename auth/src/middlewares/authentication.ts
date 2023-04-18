@@ -20,6 +20,7 @@ export const userAuth = (req: Request,res: Response,next: NextFunction) =>{
                req.body.user.id = decoded.id;
             req.body.user.email = decoded.email;
                const data = await findUser(decoded.email);
+               if(data?.isBlocked) return res.status(200).send("blocked")
                if(data){
                   req.body.user.name = data.name;
                   req.body.user.id = data.id;
